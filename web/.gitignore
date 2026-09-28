@@ -1,0 +1,21 @@
+# Ignore generated / installed artifacts
+node_modules/
+.next/
+out/
+dist/
+dist-ssr/
+.turbo/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
