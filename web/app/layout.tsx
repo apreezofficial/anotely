@@ -1,36 +1,56 @@
 import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fraunces",
+  axes: ["SOFT", "WONK"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jetbrains-mono",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://anotely.app"),
   title: {
-    default: "Anotely — talk, and it writes. Say done, and AI polishes it.",
+    default: "Anotely — notes that listen back",
     template: "%s · Anotely",
   },
   description:
-    "The voice-first notes app. Dictate naturally with Auto Write, say “anotely done”, and an AI proofreads the whole note before you apply a single change.",
+    "A notes app you can talk to. Anotely transcribes voice notes, titles them, pulls out action items, and finds them again by meaning.",
   keywords: [
     "voice notes",
-    "dictation app",
-    "ai proofreading",
+    "note taking app",
     "speech to text",
+    "ai notes",
+    "semantic search",
     "Anotely",
-    "auto write",
   ],
   authors: [{ name: "Anotely" }],
   openGraph: {
     type: "website",
     url: "https://anotely.app",
     siteName: "Anotely",
-    title: "Anotely — speak, and it writes. AI polishes it.",
+    title: "Anotely — notes that listen back",
     description:
-      "Voice-first notes. Auto Write turns speech into clean text; say “done” and AI proofreads everything.",
+      "Talk or type. Anotely writes it down, titles it, files it, and finds it later.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anotely — talk, and it writes.",
-    description: "Voice-first notes with AI proofreading the moment you say done.",
+    title: "Anotely — notes that listen back",
+    description: "Talk or type. Anotely writes it down, titles it, files it, and finds it later.",
   },
   icons: {
     icon: "/favicon.svg",
@@ -39,42 +59,18 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#06060a",
+  themeColor: "#FAF7F0",
   width: "device-width",
   initialScale: 1,
 };
 
-const softwareJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "Anotely",
-  applicationCategory: "ProductivityApplication",
-  operatingSystem: "Windows, macOS, Linux, iOS, Android",
-  description:
-    "Voice-first notes with automatic transcription and AI proofreading triggered by voice.",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  },
-};
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-        />
-      </head>
-      <body className="antialiased">{children}</body>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="bg-paper text-ink antialiased">{children}</body>
     </html>
   );
 }

@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8b5cf6" />
-      <stop offset="1" stop-color="#d946ef" />
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="16" fill="#0a0a11" />
-  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g)" />
-  <text x="32" y="44" font-family="Segoe UI, Inter, sans-serif" font-size="34" font-weight="700"
-        text-anchor="middle" fill="#ffffff">A</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" fill="#FAF7F0"/>
+  <g fill="none" stroke="#161513" stroke-width="3">
+    <rect x="2.5" y="2.5" width="27" height="27"/>
+  </g>
+  <g fill="#161513">
+    <rect x="8" y="14" width="3.4" height="6"/>
+    <rect x="14.3" y="9" width="3.4" height="16"/>
+    <rect x="20.6" y="16" width="3.4" height="4"/>
+  </g>
+  <rect x="18" y="1" width="13" height="6" fill="#D6FF3F"/>
 </svg>

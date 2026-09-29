@@ -1,13 +1,11 @@
-import { Nav } from "@/components/Nav";
-import { Hero } from "@/components/Hero";
-import { LiveDemo } from "@/components/LiveDemo";
-import { Features } from "@/components/Features";
-import { HowItWorks } from "@/components/HowItWorks";
-import { Showcase } from "@/components/Showcase";
-import { Providers } from "@/components/Providers";
-import { Pricing } from "@/components/Pricing";
-import { FAQ } from "@/components/FAQ";
-import { FinalCta, Footer } from "@/components/FinalCta";
+import { AiFeatures } from "@/components/landing/AiFeatures";
+import { Faq } from "@/components/landing/Faq";
+import { FinalCta, Footer } from "@/components/landing/FinalCta";
+import { Hero } from "@/components/landing/Hero";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { Nav } from "@/components/landing/Nav";
+import { Organize } from "@/components/landing/Organize";
+import { VoiceNotes } from "@/components/landing/VoiceNotes";
 
 export default function Page() {
   return (
@@ -15,13 +13,11 @@ export default function Page() {
       <Nav />
       <main>
         <Hero />
-        <Features />
-        <LiveDemo />
         <HowItWorks />
-        <Showcase />
-        <Providers />
-        <Pricing />
-        <FAQ />
+        <VoiceNotes />
+        <AiFeatures />
+        <Organize />
+        <Faq />
         <FinalCta />
       </main>
       <Footer />
