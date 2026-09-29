@@ -1,4 +1,4 @@
-import { Folder, Search } from "lucide-react";
+import { Folder, Magnifier } from "./icons";
 import { Container, SectionTag } from "./ui";
 
 const folders = ["inbox/", "work/", "reading/", "home/", "archive/"];

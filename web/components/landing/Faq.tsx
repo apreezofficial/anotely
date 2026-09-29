@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus } from "./icons";
 import { Container, SectionTag } from "./ui";
 
 const faqs = [
