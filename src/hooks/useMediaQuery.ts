@@ -21,8 +21,3 @@ export function useMediaQuery(query: string) {
 export function useIsWide() {
   return useMediaQuery("(min-width: 1024px)");
 }
-
-/** True on coarse pointers, where hover affordances must not be relied on. */
-export function useIsTouch() {
-  return useMediaQuery("(hover: none) and (pointer: coarse)");
-}

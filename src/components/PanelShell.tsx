@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, useDragControls } from "framer-motion";
 import { useStore } from "@/store";
 import { useIsWide } from "@/hooks/useMediaQuery";
 
@@ -16,6 +16,7 @@ export function PanelShell({
 }) {
   const wide = useIsWide();
   const setPanel = useStore((s) => s.setPanel);
+  const controls = useDragControls();
 
   if (wide) {
     return (
@@ -50,14 +51,20 @@ export function PanelShell({
         exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 320, damping: 34 }}
         drag="y"
+        dragListener={false}
+        dragControls={controls}
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={{ top: 0, bottom: 0.4 }}
         onDragEnd={(_, info) => {
           if (info.offset.y > 90 || info.velocity.y > 500) setPanel("none");
         }}
       >
-        <div className="flex shrink-0 justify-center pb-1 pt-2.5">
-          <span className="h-1 w-10 rounded-full bg-white/20" />
+        {/* Drag handle: the sheet body must stay scrollable. */}
+        <div
+          className="shrink-0 cursor-grab px-4 pb-1 pt-2.5 active:cursor-grabbing"
+          onPointerDown={(e) => controls.start(e)}
+        >
+          <span className="mx-auto block h-1 w-10 rounded-full bg-white/20" />
         </div>
         {children}
       </motion.div>
