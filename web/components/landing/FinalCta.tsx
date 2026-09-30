@@ -1,11 +1,11 @@
-import { Logo, Wordmark } from "./Logo";
+ï»¿import { Logo, Wordmark } from "./Logo";
 import { WaitlistForm } from "./WaitlistForm";
 import { Container } from "./ui";
 
 /**
  * Footer reduced to three parts: the mark, a short link list, and two flat
  * "Coming October 1" badge placeholders. No 4-column symmetric layout, no
- * generic App Store / Play Store graphics — the app is not live yet.
+ * generic App Store / Play Store graphics â€” the app is not live yet.
  */
 const links = [
   { href: "#how-it-works", label: "How it works" },
@@ -19,7 +19,7 @@ function ComingBadge({ platform }: { platform: string }) {
     <button
       type="button"
       disabled
-      title="Not available yet — coming October 1"
+      title="Not available yet â€” coming October 1"
       className="flex items-center gap-3 border-2 border-ink bg-paper px-4 py-2.5 text-left opacity-80"
     >
       <Logo className="h-7 w-7 shrink-0" />
@@ -89,7 +89,7 @@ export function Footer() {
             </div>
 
             <p className="label-mono text-[0.6875rem] text-ink/50">
-              © 2026 Anotely · desktop first · voice first
+              Â© 2026 Anotely Â· desktop first Â· voice first
             </p>
           </div>
         </div>
