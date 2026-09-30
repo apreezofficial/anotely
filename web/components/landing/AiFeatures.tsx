@@ -1,9 +1,14 @@
-import { AlignLeft, ListChecks, Search, Tag as TagIcon } from "lucide-react";
 import { Container, SectionTag } from "./ui";
+import { landingIcons } from "./icons";
 
+/**
+ * Sticky-note feature cards. Flat fill, 1.5px ink border, alternating slight
+ * rotation. No rounded corners as default shape, no shadow, no icon-in-a-circle.
+ * The icons are original ink line-art, not stock lucide glyphs.
+ */
 const features = [
   {
-    icon: AlignLeft,
+    icon: landingIcons.Summarise,
     title: "Summarise",
     body: "Long note, short version. Ask for a summary and it sits above what you wrote, never over it.",
     example: "summarise this note",
@@ -11,15 +16,15 @@ const features = [
     tilt: "note-tilt-a",
   },
   {
-    icon: TagIcon,
+    icon: landingIcons["Auto-title"],
     title: "Auto-title",
     body: "Notes are named the moment they are created. No more untitled-4 hunting for the thing you wrote.",
-    example: "title · rollout slipped a week",
+    example: "title � rollout slipped a week",
     surface: "bg-paper text-ink",
     tilt: "note-tilt-b",
   },
   {
-    icon: ListChecks,
+    icon: landingIcons["Action items"],
     title: "Action items",
     body: "Everything you said you'd do, pulled into a checklist. Tick them off or ignore it. Your call.",
     example: "[ ] send the vendor the invoice",
@@ -27,10 +32,10 @@ const features = [
     tilt: "note-tilt-c",
   },
   {
-    icon: Search,
+    icon: landingIcons["Semantic search"],
     title: "Semantic search",
     body: "Search by meaning, not keywords. Describe the note and it finds the one you meant.",
-    example: '"the staging thing" → 3 notes',
+    example: '"the staging thing" ? 3 notes',
     surface: "bg-ink text-paper",
     tilt: "note-tilt-d",
   },
@@ -59,11 +64,7 @@ export function AiFeatures() {
                 key={feature.title}
                 className={`${feature.surface} ${feature.tilt} flex flex-col border-2 border-ink p-6 sm:mt-0 lg:[&:nth-child(2)]:mt-7 lg:[&:nth-child(4)]:mt-7`}
               >
-                <Icon
-                  className="h-5 w-5"
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                />
+                <Icon className="text-ink" />
                 <h3 className="mt-5 font-display text-xl leading-snug font-semibold">
                   {feature.title}
                 </h3>

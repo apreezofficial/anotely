@@ -17,10 +17,6 @@ const DEFAULT_STROKE = 1.75;
 const CAP = "square" as const;
 const JOIN = "miter" as const;
 
-function basePath(d: string) {
-  return <path d={d} />;
-}
-
 /** Summarise: a paragraph with the middle lines shortened. */
 function SummariseIcon({ className, strokeWidth = DEFAULT_STROKE }: IconProps) {
   return (
