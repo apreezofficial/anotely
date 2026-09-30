@@ -159,3 +159,8 @@ export const landingIcons = {
   Magnifier: MagnifierIcon,
   Plus: PlusIcon,
 };
+
+export const Plus = PlusIcon;
+export const Folder = FolderIcon;
+export const Magnifier = MagnifierIcon;
+export const Search = SearchIcon;

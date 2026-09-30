@@ -1,4 +1,4 @@
-import { Plus } from "./icons";
+import { landingIcons } from "./icons";
 import { Container, SectionTag } from "./ui";
 
 const faqs = [
@@ -53,7 +53,7 @@ export function Faq() {
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-lg leading-snug font-semibold marker:content-none [&::-webkit-details-marker]:hidden sm:text-xl">
                 {faq.question}
-                <Plus
+                <landingIcons.Plus
                   className="h-5 w-5 shrink-0 transition-transform duration-150"
                   strokeWidth={1.75}
                   aria-hidden="true"

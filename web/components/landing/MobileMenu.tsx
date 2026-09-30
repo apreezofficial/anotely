@@ -1,4 +1,6 @@
-﻿import { useEffect } from "react";
+﻿"use client";
+
+import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 
 type Entry = { number: string; href: string; label: string };

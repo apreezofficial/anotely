@@ -1,4 +1,6 @@
-﻿import { useState } from "react";
+﻿"use client";
+
+import { useState } from "react";
 import { MobileMenu } from "./MobileMenu";
 import { Wordmark } from "./Logo";
 import { ButtonLink, Container } from "./ui";
