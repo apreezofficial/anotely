@@ -9,6 +9,10 @@
     --accent-ring: rgba(139, 92, 246, 0.45);
     --accent-text: #c4b5fd;
     --editor-size: 16px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
   }
 
   * {
@@ -25,7 +29,32 @@
     @apply bg-ink-950 text-slate-200 antialiased;
     font-family: theme("fontFamily.sans");
     overflow: hidden;
+    overscroll-behavior: none;
     user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Kill the 300ms tap delay and stop iOS text selection callouts on chrome. */
+  button,
+  a,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
+  input,
+  textarea,
+  select {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  /* Android/iOS zoom-on-focus kicks in below 16px. The editor keeps its own size. */
+  @media (hover: none) and (pointer: coarse) {
+    input:not(.editor-body),
+    select,
+    textarea:not(.editor-body) {
+      font-size: 16px !important;
+    }
   }
 
   ::selection {
@@ -64,6 +93,22 @@
   .icon-btn {
     @apply relative grid h-9 w-9 place-items-center rounded-xl text-slate-400 transition-all duration-200 hover:bg-white/[0.06] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
     focus-visible:ring-[var(--accent-ring)];
+  }
+
+  /* Minimum 44px hit area for coarse pointers without changing the visual size. */
+  @media (hover: none) and (pointer: coarse) {
+    .icon-btn {
+      position: relative;
+      min-width: 44px;
+      min-height: 44px;
+    }
+    .pill {
+      @apply py-2;
+      min-height: 36px;
+    }
+    .tap-row {
+      min-height: 44px;
+    }
   }
 
   .icon-btn-active {
@@ -134,6 +179,22 @@
   }
   .no-drag {
     -webkit-app-region: no-drag;
+  }
+  .safe-t {
+    padding-top: var(--safe-top);
+  }
+  .safe-b {
+    padding-bottom: var(--safe-bottom);
+  }
+  .safe-x {
+    padding-left: var(--safe-left);
+    padding-right: var(--safe-right);
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
   .text-gradient {
     @apply bg-clip-text text-transparent;

@@ -15,6 +15,7 @@ import { invoke } from "@/lib/ipc";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { markdownToHtml } from "@/lib/markdown";
+import { PanelShell } from "./PanelShell";
 import type { ChatMessage } from "@/lib/types";
 
 const QUICK = [
@@ -80,141 +81,134 @@ export function AssistantPanel() {
   };
 
   return (
-    <motion.aside
-      initial={{ width: 0, opacity: 0 }}
-      animate={{ width: 400, opacity: 1 }}
-      exit={{ width: 0, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 280, damping: 32 }}
-      className="relative z-20 h-full shrink-0 overflow-hidden border-l border-white/[0.06] bg-ink-900/70 backdrop-blur-2xl"
-    >
-      <div className="flex h-full w-[400px] flex-col">
-        <header className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3.5">
-          <span className="grid h-8 w-8 place-items-center rounded-lg accent-gradient">
-            <Sparkles className="h-4 w-4 text-white" />
-          </span>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-white">AI assistant</p>
-            <p className="text-[11px] text-slate-500">
-              {note ? `Reading “${note.title || "untitled"}”` : "No note open"}
-            </p>
-          </div>
-          <button
-            onClick={() => setPanel("none")}
-            className="text-slate-500 transition hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </header>
-
-        <div className="border-b border-white/[0.06] px-3 py-2.5">
-          <div className="flex flex-wrap gap-1.5">
-            {QUICK.map((q) => (
-              <motion.button
-                key={q.label}
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => void ask(q.prompt)}
-                className="pill transition hover:border-white/25 hover:text-white"
-              >
-                <q.icon className="h-3 w-3" />
-                {q.label}
-              </motion.button>
-            ))}
-          </div>
+    <PanelShell width={400}>
+      <header className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3.5">
+        <span className="grid h-8 w-8 place-items-center rounded-lg accent-gradient">
+          <Sparkles className="h-4 w-4 text-white" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-white">AI assistant</p>
+          <p className="truncate text-[11px] text-slate-500">
+            {note ? `Reading “${note.title || "untitled"}”` : "No note open"}
+          </p>
         </div>
-
-        <div ref={scroller} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
-          {chat.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="pt-8 text-center"
-            >
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl accent-gradient"
-              >
-                <Sparkles className="h-5 w-5 text-white" />
-              </motion.div>
-              <p className="text-sm font-medium text-slate-300">Ask anything about this note</p>
-              <p className="mt-1 text-xs text-slate-500">
-                Summarise it, pull out action items, or draft the next section.
-              </p>
-            </motion.div>
-          )}
-
-          <AnimatePresence initial={false}>
-            {chat.map((message, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                className={cn(
-                  "group relative rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed",
-                  message.role === "user"
-                    ? "ml-8 bg-white/[0.07] text-slate-100"
-                    : "mr-6 border border-white/[0.07] bg-black/25 text-slate-300",
-                )}
-              >
-                <div
-                  className="editor-body select-text"
-                  style={{ fontSize: 13.5 }}
-                  dangerouslySetInnerHTML={{ __html: markdownToHtml(message.content) }}
-                />
-                {message.role === "assistant" && note && (
-                  <button
-                    onClick={() => {
-                      patchNote(note.id, {
-                        content: `${note.content}\n\n${message.content}`.trim(),
-                      });
-                      toast("Inserted into note", "success");
-                    }}
-                    className="mt-2 inline-flex items-center gap-1 text-[11px] text-slate-500 opacity-0 transition group-hover:opacity-100 hover:text-white"
-                  >
-                    <ArrowDownToLine className="h-3 w-3" /> insert into note
-                  </button>
-                )}
-              </motion.div>
-            ))}
-          </AnimatePresence>
-
-          {chatBusy && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-2 text-xs text-slate-500"
-            >
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              thinking…
-            </motion.div>
-          )}
-        </div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void ask(input);
-          }}
-          className="flex items-center gap-2 border-t border-white/[0.06] p-3"
+        <button
+          onClick={() => setPanel("none")}
+          aria-label="Close assistant"
+          className="-m-1 p-1 text-slate-500 transition hover:text-white"
         >
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about this note…"
-            className="flex-1 rounded-xl border border-white/10 bg-black/25 px-3.5 py-2.5 text-sm outline-none transition placeholder:text-slate-600 focus:border-[var(--accent-from)] focus:ring-2 focus:ring-[var(--accent-ring)]"
-          />
-          <motion.button
-            type="submit"
-            whileTap={{ scale: 0.92 }}
-            className="grid h-10 w-10 place-items-center rounded-xl accent-gradient text-white disabled:opacity-40"
-            disabled={!input.trim() || chatBusy}
-          >
-            <Send className="h-4 w-4" />
-          </motion.button>
-        </form>
+          <X className="h-4 w-4" />
+        </button>
+      </header>
+
+      <div className="border-b border-white/[0.06] px-3 py-2.5">
+        <div className="flex flex-wrap gap-1.5">
+          {QUICK.map((q) => (
+            <motion.button
+              key={q.label}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => void ask(q.prompt)}
+              className="pill transition hover:border-white/25 hover:text-white"
+            >
+              <q.icon className="h-3 w-3" />
+              {q.label}
+            </motion.button>
+          ))}
+        </div>
       </div>
-    </motion.aside>
+
+      <div ref={scroller} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+        {chat.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="pt-8 text-center"
+          >
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl accent-gradient"
+            >
+              <Sparkles className="h-5 w-5 text-white" />
+            </motion.div>
+            <p className="text-sm font-medium text-slate-300">Ask anything about this note</p>
+            <p className="mt-1 text-xs text-slate-500">
+              Summarise it, pull out action items, or draft the next section.
+            </p>
+          </motion.div>
+        )}
+
+        <AnimatePresence initial={false}>
+          {chat.map((message, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 26 }}
+              className={cn(
+                "group relative rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed",
+                message.role === "user"
+                  ? "ml-8 bg-white/[0.07] text-slate-100"
+                  : "mr-6 border border-white/[0.07] bg-black/25 text-slate-300",
+              )}
+            >
+              <div
+                className="editor-body select-text"
+                style={{ fontSize: 13.5 }}
+                dangerouslySetInnerHTML={{ __html: markdownToHtml(message.content) }}
+              />
+              {message.role === "assistant" && note && (
+                <button
+                  onClick={() => {
+                    patchNote(note.id, {
+                      content: `${note.content}\n\n${message.content}`.trim(),
+                    });
+                    toast("Inserted into note", "success");
+                  }}
+                    className="mt-2 inline-flex items-center gap-1 text-[11px] text-slate-500 transition hover:text-white [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
+                >
+                  <ArrowDownToLine className="h-3 w-3" /> insert into note
+                </button>
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        {chatBusy && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center gap-2 text-xs text-slate-500"
+          >
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            thinking…
+          </motion.div>
+        )}
+      </div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void ask(input);
+        }}
+        className="flex items-center gap-2 border-t border-white/[0.06] p-3"
+      >
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask about this note…"
+          className="flex-1 rounded-xl border border-white/10 bg-black/25 px-3.5 py-2.5 text-sm outline-none transition placeholder:text-slate-600 focus:border-[var(--accent-from)] focus:ring-2 focus:ring-[var(--accent-ring)]"
+        />
+        <motion.button
+          type="submit"
+          whileTap={{ scale: 0.92 }}
+          className="grid h-10 w-10 place-items-center rounded-xl accent-gradient text-white disabled:opacity-40"
+          disabled={!input.trim() || chatBusy}
+        >
+          <Send className="h-4 w-4" />
+        </motion.button>
+      </form>
+    </PanelShell>
   );
 }

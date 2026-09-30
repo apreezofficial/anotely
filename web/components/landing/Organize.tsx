@@ -1,4 +1,4 @@
-import { Folder, Magnifier } from "./icons";
+import { Folder, Search } from "./icons";
 import { Container, SectionTag } from "./ui";
 
 const folders = ["inbox/", "work/", "reading/", "home/", "archive/"];

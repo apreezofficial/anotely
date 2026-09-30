@@ -150,22 +150,25 @@ export function CommandPalette({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center pt-[14vh]"
+          className="fixed inset-0 z-50 flex items-end justify-center sm:items-start sm:pt-[14vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" onClick={onClose} />
 
           <motion.div
-            initial={{ opacity: 0, y: -18, scale: 0.97 }}
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -12, scale: 0.98 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 380, damping: 30 }}
-            className="relative w-[36rem] max-w-[92vw] overflow-hidden rounded-2xl border border-white/10 bg-ink-900/95 shadow-[0_40px_100px_-40px_rgba(0,0,0,1)] backdrop-blur-2xl"
+            className="safe-b relative flex max-h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-ink-900/95 shadow-[0_40px_100px_-40px_rgba(0,0,0,1)] backdrop-blur-2xl sm:max-h-none sm:w-[36rem] sm:max-w-[92vw] sm:rounded-2xl"
           >
+            <div className="flex shrink-0 justify-center pb-1 pt-2.5 sm:hidden">
+              <span className="h-1 w-10 rounded-full bg-white/20" />
+            </div>
             <div className="flex items-center gap-3 border-b border-white/[0.07] px-4 py-3.5">
-              <Search className="h-4 w-4 text-slate-500" />
+              <Search className="h-4 w-4 shrink-0 text-slate-500" />
               <input
                 autoFocus
                 value={query}
@@ -186,14 +189,14 @@ export function CommandPalette({
                   if (e.key === "Escape") onClose();
                 }}
                 placeholder="Search notes or run a command…"
-                className="flex-1 bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-600"
+                className="min-w-0 flex-1 bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-600"
               />
-              <kbd className="rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-slate-500">
+              <kbd className="hidden rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-slate-500 sm:inline-block">
                 esc
               </kbd>
             </div>
 
-            <div ref={listRef} className="max-h-[22rem] overflow-y-auto p-2">
+            <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:max-h-[22rem]">
               {results.length === 0 ? (
                 <p className="px-3 py-8 text-center text-sm text-slate-600">Nothing matches.</p>
               ) : (
@@ -203,8 +206,8 @@ export function CommandPalette({
                     onMouseEnter={() => setCursor(index)}
                     onClick={() => runAt(index)}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition",
-                      cursor === index ? "bg-white/[0.07]" : "hover:bg-white/[0.04]",
+                      "tap-row flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition",
+                      cursor === index ? "bg-white/[0.07]" : "hover:bg-white/[0.04] active:bg-white/[0.07]",
                     )}
                   >
                     {item.type === "command" ? (
@@ -214,7 +217,7 @@ export function CommandPalette({
                         </span>
                         <span className="flex-1 text-sm text-slate-100">{item.value.label}</span>
                         {item.value.hint && (
-                          <span className="text-[10.5px] uppercase tracking-wider text-slate-600">
+                          <span className="hidden text-[10.5px] uppercase tracking-wider text-slate-600 sm:inline">
                             {item.value.hint}
                           </span>
                         )}
@@ -232,7 +235,7 @@ export function CommandPalette({
                             {snippet(item.value.content, 60) || "Empty note"}
                           </span>
                         </span>
-                        <span className="text-[10.5px] uppercase tracking-wider text-slate-600">
+                        <span className="hidden text-[10.5px] uppercase tracking-wider text-slate-600 sm:inline">
                           {relativeTime(item.value.updatedAt)}
                         </span>
                       </>

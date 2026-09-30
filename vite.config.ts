@@ -13,10 +13,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        // desktop/mobile app shell
+        // desktop/mobile app shell (the marketing site lives in web/, on Next)
         app: path.resolve(__dirname, "index.html"),
-        // marketing site
-        site: path.resolve(__dirname, "site.html"),
       },
     },
   },

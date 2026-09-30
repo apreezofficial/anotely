@@ -3,6 +3,7 @@ import { Check, Copy, Loader2, Undo2, Wand2, X } from "lucide-react";
 import { useMemo } from "react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
+import { PanelShell } from "./PanelShell";
 
 const KIND_STYLE: Record<string, string> = {
   grammar: "text-sky-300 bg-sky-400/10 border-sky-400/25",
@@ -55,15 +56,8 @@ export function ProofreadPanel() {
     !!result && !!proof.before && result.corrected.trim() === proof.before.trim();
 
   return (
-    <motion.aside
-      initial={{ width: 0, opacity: 0 }}
-      animate={{ width: 380, opacity: 1 }}
-      exit={{ width: 0, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 280, damping: 32 }}
-      className="relative z-20 h-full shrink-0 overflow-hidden border-l border-white/[0.06] bg-ink-900/70 backdrop-blur-2xl"
-    >
-      <div className="flex h-full w-[380px] flex-col">
-        <header className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3.5">
+    <PanelShell width={380}>
+      <header className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3.5">
           <motion.span
             animate={{ rotate: proof.running ? 360 : 0 }}
             transition={proof.running ? { duration: 3, repeat: Infinity, ease: "linear" } : {}}
@@ -91,7 +85,7 @@ export function ProofreadPanel() {
             <X className="h-4 w-4" />
           </button>
         </header>
-
+  
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           <AnimatePresence mode="wait">
             {proof.running ? (
@@ -140,7 +134,7 @@ export function ProofreadPanel() {
                     <p className="text-xs text-slate-400">{result.summary}</p>
                   </div>
                 </div>
-
+  
                 {result.changes.length > 0 ? (
                   <div className="space-y-1.5">
                     {result.changes.map((change, i) => (
@@ -179,7 +173,7 @@ export function ProofreadPanel() {
                     Nothing to fix — your writing is tidy.
                   </p>
                 )}
-
+  
                 <div>
                   <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                     Corrected text
@@ -204,7 +198,7 @@ export function ProofreadPanel() {
             )}
           </AnimatePresence>
         </div>
-
+  
         {!proof.running && result && (
           <div className="flex items-center gap-2 border-t border-white/[0.06] p-3">
             <button
@@ -233,8 +227,7 @@ export function ProofreadPanel() {
             </button>
           </div>
         )}
-      </div>
-    </motion.aside>
+    </PanelShell>
   );
 }
 

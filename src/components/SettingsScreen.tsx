@@ -65,15 +65,15 @@ export function SettingsScreen() {
   };
 
   return (
-    <div className="flex h-full min-w-0 flex-1">
-      <nav className="w-52 shrink-0 space-y-1 border-r border-white/[0.06] px-3 py-6">
+    <div className="flex h-full min-w-0 flex-1 flex-col">
+      <nav className="scrollbar-none safe-x flex shrink-0 gap-1.5 overflow-x-auto border-b border-white/[0.06] px-3 py-2.5 lg:block lg:w-52 lg:space-y-1 lg:overflow-visible lg:border-b-0 lg:border-r lg:px-3 lg:py-6">
         {SECTIONS.map((s) => (
           <button
             key={s.key}
             onClick={() => setSection(s.key)}
             className={cn(
-              "relative flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] transition-colors",
-              section === s.key ? "text-white" : "text-slate-400 hover:bg-white/[0.04]",
+              "tap-row relative flex w-auto shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-[13px] transition-colors lg:w-full",
+              section === s.key ? "text-white" : "text-slate-400 hover:bg-white/[0.04] active:bg-white/[0.07]",
             )}
           >
             {section === s.key && (
@@ -88,7 +88,7 @@ export function SettingsScreen() {
         ))}
         <button
           onClick={() => setView("notes")}
-          className="mt-6 flex w-full items-center gap-2 px-3 text-[12px] text-slate-500 transition hover:text-white"
+          className="tap-row mt-2 hidden w-full items-center gap-2 px-3 text-[12px] text-slate-500 transition hover:text-white lg:flex"
         >
           <X className="h-3.5 w-3.5" /> close settings
         </button>
@@ -99,14 +99,14 @@ export function SettingsScreen() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
-        className="min-w-0 flex-1 overflow-y-auto px-8 py-6"
+        className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 lg:px-8 lg:py-6"
       >
         <div className="mx-auto max-w-2xl space-y-6">
           {section === "ai" && (
             <>
               <Header title="AI model" hint="Anotely uses this model for proofreading and the assistant." />
               <div className="surface space-y-4 p-5">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Field label="Provider">
                     <select
                       value={settings.provider}
@@ -180,7 +180,7 @@ export function SettingsScreen() {
                   </Field>
                 ) : null}
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Field label={`Creativity · ${settings.temperature.toFixed(1)}`}>
                     <input
                       type="range"
@@ -246,7 +246,7 @@ export function SettingsScreen() {
                   checked={settings.suggestStyle}
                   onChange={(v) => void update({ suggestStyle: v })}
                 />
-                <div className="grid grid-cols-2 gap-3 pt-3">
+                <div className="grid grid-cols-1 gap-3 pt-3 sm:grid-cols-2">
                   <Field label="Done phrase" hint="Say this to stop and proofread">
                     <input
                       value={settings.donePhrase}
@@ -316,7 +316,7 @@ export function SettingsScreen() {
               <div className="surface space-y-4 p-5">
                 {settings.sttProvider !== "web" && (
                   <>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <Field label="Model">
                         <input
                           value={settings.sttModel}

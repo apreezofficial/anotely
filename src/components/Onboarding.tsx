@@ -35,7 +35,7 @@ export function Onboarding() {
   const provider = PROVIDERS.find((p) => p.key === settings.provider) ?? PROVIDERS[0];
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center overflow-y-auto p-6">
+    <div className="safe-t safe-b relative flex h-full w-full items-center justify-center overflow-y-auto overscroll-contain p-3 sm:p-6">
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -56,7 +56,7 @@ export function Onboarding() {
           ))}
         </div>
 
-        <div className="relative min-h-[24rem] overflow-hidden px-8 py-8">
+        <div className="relative min-h-[22rem] overflow-hidden px-5 py-6 sm:min-h-[24rem] sm:px-8 sm:py-8">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={step}
@@ -74,7 +74,7 @@ export function Onboarding() {
                     title="Plug in your AI"
                     hint="Anotely uses this to proofread what you dictate. You can skip it and add it later in Settings."
                   />
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <Field label="Provider">
                       <select
                         value={settings.provider}
@@ -160,7 +160,7 @@ export function Onboarding() {
                       </button>
                     ))}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <Field label="Say this to finish" hint="Triggers AI proofreading">
                       <input
                         value={settings.donePhrase}
@@ -259,7 +259,7 @@ function Welcome() {
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {[
           { icon: <Mic className="h-4 w-4" />, title: "Auto Write", body: "Speak naturally" },
           { icon: <Sparkles className="h-4 w-4" />, title: "Smart text", body: "Spoken punctuation" },

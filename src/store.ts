@@ -59,6 +59,7 @@ interface AppState {
   settings: Settings;
   toasts: Toast[];
   panel: Panel;
+  navOpen: boolean;
 
   dictation: { state: DictationState; level: number; engine: "web" | "cloud"; interim: string };
   proof: {
@@ -85,6 +86,7 @@ interface AppState {
   toast: (message: string, tone?: Toast["tone"], action?: Toast["action"]) => void;
   dismissToast: (id: string) => void;
   setPanel: (panel: Panel) => void;
+  setNavOpen: (open: boolean) => void;
   setDictation: (patch: Partial<AppState["dictation"]>) => void;
   startProof: (before: string) => Promise<void>;
   setProof: (patch: Partial<AppState["proof"]>) => void;
@@ -110,6 +112,7 @@ export const useStore = create<AppState>((set, get) => ({
   settings: DEFAULT_SETTINGS,
   toasts: [],
   panel: "none",
+  navOpen: false,
   dictation: { state: "idle", level: 0, engine: "web", interim: "" },
   proof: { running: false, result: null, before: null, rejectAll: null },
   chat: [],
@@ -222,11 +225,11 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   select(id) {
-    set({ activeId: id });
+    set({ activeId: id, navOpen: false });
   },
 
   setView(view) {
-    set({ view, query: view === "search" ? get().query : "" });
+    set({ view, navOpen: false, query: view === "search" ? get().query : "" });
   },
 
   setQuery(query) {
@@ -253,6 +256,10 @@ export const useStore = create<AppState>((set, get) => ({
 
   setPanel(panel) {
     set({ panel });
+  },
+
+  setNavOpen(navOpen) {
+    set({ navOpen });
   },
 
   setDictation(patch) {

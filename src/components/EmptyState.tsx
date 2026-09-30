@@ -123,7 +123,7 @@ function Centered({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ type: "spring", stiffness: 240, damping: 24 }}
-      className="flex h-full flex-col items-center justify-center gap-5 px-10 text-center"
+      className="flex h-full flex-col items-center justify-center gap-5 px-6 text-center lg:px-10"
     >
       {icon}
       <div className="max-w-md space-y-1.5">

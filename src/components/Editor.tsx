@@ -6,6 +6,7 @@ import {
   Eye,
   EyeOff,
   Hash,
+  Menu,
   Pin,
   PinOff,
   RotateCcw,
@@ -20,6 +21,7 @@ import { useStore } from "@/store";
 import { NOTE_COLORS, cn, readTime, relativeTime } from "@/lib/utils";
 import { markdownToHtml } from "@/lib/markdown";
 import { dictationCursor } from "@/lib/cursor";
+import { useIsWide } from "@/hooks/useMediaQuery";
 import { MotionIconButton } from "./ui";
 import type { Note } from "@/lib/types";
 
@@ -40,7 +42,10 @@ export function Editor({
   const select = useStore((s) => s.select);
   const settings = useStore((s) => s.settings);
   const setPanel = useStore((s) => s.setPanel);
+  const setNavOpen = useStore((s) => s.setNavOpen);
   const toast = useStore((s) => s.toast);
+
+  const wide = useIsWide();
 
   const [preview, setPreview] = useState(false);
   const [tagInput, setTagInput] = useState("");
@@ -88,140 +93,163 @@ export function Editor({
     setTagInput("");
   };
 
+  const actions = (
+    <>
+      <MotionIconButton
+        title="AI proofread now"
+        onClick={onProofread}
+        className="text-[var(--accent-text)]"
+      >
+        <Wand2 className="h-4 w-4" />
+      </MotionIconButton>
+      <MotionIconButton
+        title="Ask AI about this note"
+        onClick={onOpenAssistant}
+      >
+        <Sparkles className="h-4 w-4" />
+      </MotionIconButton>
+      <MotionIconButton
+        className={cn(preview && "icon-btn-active")}
+        title={preview ? "Edit mode" : "Preview"}
+        onClick={() => setPreview((p) => !p)}
+      >
+        {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+      </MotionIconButton>
+      <MotionIconButton
+        className={cn(note.starred && "icon-btn-active text-amber-300")}
+        title="Star"
+        onClick={() => patchNote(note.id, { starred: !note.starred })}
+      >
+        <Star className="h-4 w-4" fill={note.starred ? "currentColor" : "none"} />
+      </MotionIconButton>
+      <MotionIconButton
+        className={cn(note.pinned && "icon-btn-active")}
+        title={note.pinned ? "Unpin" : "Pin to top"}
+        onClick={() => patchNote(note.id, { pinned: !note.pinned })}
+      >
+        {note.pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+      </MotionIconButton>
+      <MotionIconButton
+        title="Copy text"
+        onClick={() => {
+          void navigator.clipboard.writeText(note.content);
+          toast("Copied to clipboard", "success");
+        }}
+      >
+        <Copy className="h-4 w-4" />
+      </MotionIconButton>
+      <MotionIconButton
+        title={note.folder === "archive" ? "Move to notes" : "Archive"}
+        onClick={() =>
+          patchNote(note.id, {
+            folder: note.folder === "archive" ? "notes" : "archive",
+          })
+        }
+      >
+        {note.folder === "archive" ? (
+          <RotateCcw className="h-4 w-4" />
+        ) : (
+          <Archive className="h-4 w-4" />
+        )}
+      </MotionIconButton>
+      <MotionIconButton
+        title="Delete note"
+        className="hover:text-rose-400"
+        onClick={() => {
+          void trashNote(note.id);
+          select(null);
+        }}
+      >
+        <Trash2 className="h-4 w-4" />
+      </MotionIconButton>
+    </>
+  );
+
   return (
     <div className="relative flex h-full min-w-0 flex-1 flex-col">
-      <header className="flex items-start gap-3 border-b border-white/[0.06] px-7 pb-4 pt-6">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <AnimatePresence>
-              {note.color && (
-                <motion.span
-                  layoutId="note-color-dot"
-                  className="h-2.5 w-2.5 shrink-0 rounded-full"
-                  style={{
-                    background: NOTE_COLORS.find((c) => c.key === note.color)?.dot,
-                  }}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                />
-              )}
-            </AnimatePresence>
-            <textarea
-              ref={titleRef}
-              rows={1}
-              value={note.title}
-              onChange={(e) => patchNote(note.id, { title: e.target.value })}
-              placeholder="Untitled note"
-              className="w-full resize-none overflow-hidden bg-transparent font-display text-2xl font-semibold tracking-tight text-white outline-none placeholder:text-slate-600"
-            />
+      <header className="safe-t safe-x shrink-0 border-b border-white/[0.06] px-4 pb-3 pt-2.5 lg:px-7 lg:pb-4 lg:pt-6">
+        <div className="flex items-start gap-2 lg:gap-3">
+          {!wide && (
+            <MotionIconButton
+              title="Notes and folders"
+              aria-label="Open navigation"
+              onClick={() => setNavOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </MotionIconButton>
+          )}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <AnimatePresence>
+                {note.color && (
+                  <motion.span
+                    layoutId="note-color-dot"
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{
+                      background: NOTE_COLORS.find((c) => c.key === note.color)?.dot,
+                    }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                  />
+                )}
+              </AnimatePresence>
+              <textarea
+                ref={titleRef}
+                rows={1}
+                value={note.title}
+                onChange={(e) => patchNote(note.id, { title: e.target.value })}
+                placeholder="Untitled note"
+                className="w-full resize-none overflow-hidden bg-transparent font-display text-xl font-semibold tracking-tight text-white outline-none placeholder:text-slate-600 lg:text-2xl"
+              />
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+              <span>Edited {relativeTime(note.updatedAt)}</span>
+              <span className="text-slate-700">•</span>
+              <span>{note.wordCount.toLocaleString()} words</span>
+              <span className="text-slate-700">•</span>
+              <span>{readTime(note.wordCount)}</span>
+              <AnimatePresence>
+                {note.lastProofreadAt && (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="inline-flex items-center gap-1 rounded-full accent-gradient px-2 py-0.5 font-medium text-white"
+                  >
+                    <Sparkles className="h-3 w-3" /> polished
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {savedFlash && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="inline-flex items-center gap-1 text-emerald-400"
+                  >
+                    <Check className="h-3 w-3" /> saved
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
-            <span>Edited {relativeTime(note.updatedAt)}</span>
-            <span className="text-slate-700">•</span>
-            <span>{note.wordCount.toLocaleString()} words</span>
-            <span className="text-slate-700">•</span>
-            <span>{readTime(note.wordCount)}</span>
-            <AnimatePresence>
-              {note.lastProofreadAt && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="inline-flex items-center gap-1 rounded-full accent-gradient px-2 py-0.5 font-medium text-white"
-                >
-                  <Sparkles className="h-3 w-3" /> polished
-                </motion.span>
-              )}
-            </AnimatePresence>
-            <AnimatePresence>
-              {savedFlash && (
-                <motion.span
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="inline-flex items-center gap-1 text-emerald-400"
-                >
-                  <Check className="h-3 w-3" /> saved
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </div>
+          {wide && (
+            <div className="flex items-center gap-1">{actions}</div>
+          )}
         </div>
 
-        <div className="flex items-center gap-1">
-          <MotionIconButton
-            title="AI proofread now (Ctrl+Shift+P)"
-            onClick={onProofread}
-            className="text-[var(--accent-text)]"
-          >
-            <Wand2 className="h-4 w-4" />
-          </MotionIconButton>
-          <MotionIconButton
-            title="Ask AI about this note"
-            onClick={onOpenAssistant}
-          >
-            <Sparkles className="h-4 w-4" />
-          </MotionIconButton>
-          <MotionIconButton
-            className={cn(preview && "icon-btn-active")}
-            title={preview ? "Edit mode" : "Preview (Ctrl+/)"}
-            onClick={() => setPreview((p) => !p)}
-          >
-            {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </MotionIconButton>
-          <MotionIconButton
-            className={cn(note.starred && "icon-btn-active text-amber-300")}
-            title="Star"
-            onClick={() => patchNote(note.id, { starred: !note.starred })}
-          >
-            <Star className="h-4 w-4" fill={note.starred ? "currentColor" : "none"} />
-          </MotionIconButton>
-          <MotionIconButton
-            className={cn(note.pinned && "icon-btn-active")}
-            title={note.pinned ? "Unpin" : "Pin to top"}
-            onClick={() => patchNote(note.id, { pinned: !note.pinned })}
-          >
-            {note.pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
-          </MotionIconButton>
-          <MotionIconButton
-            title="Copy text"
-            onClick={() => {
-              void navigator.clipboard.writeText(note.content);
-              toast("Copied to clipboard", "success");
-            }}
-          >
-            <Copy className="h-4 w-4" />
-          </MotionIconButton>
-          <MotionIconButton
-            title={note.folder === "archive" ? "Move to notes" : "Archive"}
-            onClick={() =>
-              patchNote(note.id, {
-                folder: note.folder === "archive" ? "notes" : "archive",
-              })
-            }
-          >
-            {note.folder === "archive" ? (
-              <RotateCcw className="h-4 w-4" />
-            ) : (
-              <Archive className="h-4 w-4" />
-            )}
-          </MotionIconButton>
-          <MotionIconButton
-            title="Delete note"
-            className="hover:text-rose-400"
-            onClick={() => {
-              void trashNote(note.id);
-              select(null);
-            }}
-          >
-            <Trash2 className="h-4 w-4" />
-          </MotionIconButton>
-        </div>
+        {!wide && (
+          <div className="scrollbar-none -mx-1 mt-2 flex items-center gap-1 overflow-x-auto px-1 pb-0.5">
+            {actions}
+          </div>
+        )}
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-7 pb-40 pt-5">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-44 pt-4 lg:px-7 lg:pb-40 lg:pt-5">
         {preview ? (
           <div
             className="editor-body max-w-3xl select-text text-slate-300"
@@ -363,7 +391,7 @@ export function Editor({
         </div>
       )}
 
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 flex items-center justify-between px-7 py-2 text-[10.5px] uppercase tracking-wider text-slate-600">
+      <div className="safe-x pointer-events-none absolute bottom-0 left-0 right-0 flex items-center justify-between px-4 py-2 text-[10.5px] uppercase tracking-wider text-slate-600 lg:px-7">
         <span>{note.charCount.toLocaleString()} characters</span>
         <button
           className="pointer-events-auto transition hover:text-slate-300"

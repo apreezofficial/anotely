@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Backdrop } from "@/components/Backdrop";
 import { Sidebar } from "@/components/Sidebar";
+import { NavDrawer } from "@/components/NavDrawer";
+import { TopBar } from "@/components/TopBar";
 import { Editor } from "@/components/Editor";
 import { EmptyState } from "@/components/EmptyState";
 import { DictationDock } from "@/components/DictationDock";
@@ -14,6 +17,7 @@ import { Onboarding } from "@/components/Onboarding";
 import { Preloader } from "@/components/Preloader";
 import { Toasts } from "@/components/Toasts";
 import { useDictation } from "@/hooks/useDictation";
+import { useIsWide } from "@/hooks/useMediaQuery";
 import { useStore } from "@/store";
 import { ACCENTS } from "@/lib/utils";
 
@@ -29,6 +33,11 @@ export default function App() {
   const init = useStore((s) => s.init);
   const createNote = useStore((s) => s.createNote);
   const setPanel = useStore((s) => s.setPanel);
+  const setNavOpen = useStore((s) => s.setNavOpen);
+  const navOpen = useStore((s) => s.navOpen);
+  const setView = useStore((s) => s.setView);
+
+  const wide = useIsWide();
 
   const [filter, setFilter] = useState("notes");
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -69,6 +78,10 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (wide) setNavOpen(false);
+  }, [wide, setNavOpen]);
+
+  useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const meta = event.ctrlKey || event.metaKey;
       if (meta && event.shiftKey && event.code === "Space") {
@@ -85,12 +98,13 @@ export default function App() {
         void createNote();
       } else if (event.key === "Escape") {
         if (paletteOpen) setPaletteOpen(false);
+        else if (navOpen) setNavOpen(false);
         else if (panel !== "none") setPanel("none");
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [createNote, panel, paletteOpen, setPanel, toggleDictation]);
+  }, [createNote, navOpen, panel, paletteOpen, setNavOpen, setPanel, toggleDictation]);
 
   if (!ready) {
     return (
@@ -115,9 +129,39 @@ export default function App() {
     <div className="flex h-full w-full">
       <Preloader visible={!booted} />
       <Backdrop />
-      <Sidebar filter={filter} setFilter={setFilter} />
 
-      <main className="relative flex min-w-0 flex-1">
+      {wide ? (
+        <Sidebar filter={filter} setFilter={setFilter} />
+      ) : (
+        <NavDrawer>
+          <Sidebar filter={filter} setFilter={setFilter} variant="drawer" />
+        </NavDrawer>
+      )}
+
+      <main className="relative flex min-w-0 flex-1 flex-col">
+        {!wide && view === "settings" && (
+          <TopBar title="Settings" onBack={() => setView("notes")} />
+        )}
+        {!wide && view === "trash" && (
+          <TopBar title="Trash" onBack={() => setView("notes")} />
+        )}
+        {!wide && !activeNote && view === "notes" && (
+          <TopBar
+            title="Anotely"
+            right={
+              <motion.button
+                whileTap={{ scale: 0.94 }}
+                onClick={() => void createNote()}
+                title="New note"
+                aria-label="New note"
+                className="grid h-10 w-10 place-items-center rounded-xl accent-gradient text-white"
+              >
+                <Plus className="h-5 w-5" strokeWidth={2.4} />
+              </motion.button>
+            }
+          />
+        )}
+
         <AnimatePresence mode="wait">
           <motion.div
             key={
@@ -135,7 +179,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
-            className="flex min-w-0 flex-1"
+            className="flex min-h-0 min-w-0 flex-1"
           >
             {view === "settings" ? (
               <SettingsScreen />

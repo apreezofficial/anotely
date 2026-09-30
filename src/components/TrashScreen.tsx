@@ -15,9 +15,9 @@ export function TrashScreen() {
   if (trashed.length === 0) return <EmptyState kind="trash" />;
 
   return (
-    <div className="min-w-0 flex-1 overflow-y-auto px-8 py-6">
+    <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 lg:px-8 lg:py-6">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-5 flex items-center justify-between">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-xl font-semibold tracking-tight text-white">Trash</h2>
             <p className="text-sm text-slate-500">
@@ -26,7 +26,7 @@ export function TrashScreen() {
           </div>
           <button
             onClick={() => void emptyTrash()}
-            className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-500/10 px-3.5 py-2 text-sm font-medium text-rose-200 transition hover:bg-rose-500/20"
+            className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-500/10 px-3.5 py-2.5 text-sm font-medium text-rose-200 transition hover:bg-rose-500/20"
           >
             <Flame className="h-4 w-4" /> Empty trash
           </button>

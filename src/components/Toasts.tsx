@@ -20,7 +20,7 @@ export function Toasts() {
   const dismiss = useStore((s) => s.dismissToast);
 
   return (
-    <div className="pointer-events-none fixed bottom-5 left-1/2 z-50 flex w-[26rem] max-w-[90vw] -translate-x-1/2 flex-col items-center gap-2">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[max(6.5rem,calc(var(--safe-bottom)+6.5rem))] z-50 mx-auto flex w-[26rem] max-w-[92vw] flex-col items-center gap-2 px-3">
       <AnimatePresence initial={false}>
         {toasts.map((toast) => {
           const Icon = ICONS[toast.tone];

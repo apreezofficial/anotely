@@ -34,7 +34,7 @@ export function DictationDock({
   const sttProvider = useStore((s) => s.settings.sttProvider);
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center pb-6">
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-3 px-3 pb-[max(0.75rem,var(--safe-bottom))] sm:pb-6">
       <AnimatePresence>
         {showHelp && (
           <motion.div
@@ -42,7 +42,7 @@ export function DictationDock({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.97 }}
             transition={{ type: "spring", stiffness: 320, damping: 26 }}
-            className="surface pointer-events-auto mb-3 w-[26rem] max-w-[90vw] p-3"
+            className="surface pointer-events-auto w-full p-3 sm:w-[26rem] sm:max-w-[90vw]"
           >
             <div className="mb-2 flex items-center justify-between px-1">
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -50,7 +50,8 @@ export function DictationDock({
               </p>
               <button
                 onClick={() => setShowHelp(false)}
-                className="text-slate-500 transition hover:text-white"
+                aria-label="Close voice commands"
+                className="-m-1 p-1 text-slate-500 transition hover:text-white"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -62,29 +63,37 @@ export function DictationDock({
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center justify-between rounded-lg px-2 py-1.5 text-xs hover:bg-white/[0.04]"
+                  className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-xs"
                 >
                   <span className="accent-text">“{i === COMMANDS.length - 1 ? donePhrase : c.phrase}”</span>
-                  <span className="text-slate-500">{c.effect}</span>
+                  <span className="truncate text-slate-500">{c.effect}</span>
                 </motion.div>
               ))}
             </div>
             <p className="mt-2 border-t border-white/[0.06] px-2 pt-2 text-[11px] text-slate-500">
-              Engine: <span className="text-slate-300">{sttProvider === "web" ? "built-in browser speech" : sttProvider}</span>
-              . Shortcut <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px]">Ctrl</kbd>{" "}
-              <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px]">Shift</kbd>{" "}
-              <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px]">Space</kbd> to talk.
+              Engine:{" "}
+              <span className="text-slate-300">
+                {sttProvider === "web" ? "built-in browser speech" : sttProvider}
+              </span>
+              .
+              <span className="hidden sm:inline">
+                {" "}
+                Shortcut <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px]">Ctrl</kbd>{" "}
+                <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px]">Shift</kbd>{" "}
+                <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px]">Space</kbd> to talk.
+              </span>
             </p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/[0.08] bg-ink-900/80 p-1.5 pl-2 shadow-[0_24px_60px_-30px_rgba(0,0,0,1)] backdrop-blur-2xl">
+      <div className="pointer-events-auto flex w-full items-center gap-2 rounded-full border border-white/[0.08] bg-ink-900/85 p-1.5 pl-2 shadow-[0_24px_60px_-30px_rgba(0,0,0,1)] backdrop-blur-2xl sm:w-auto sm:pl-2">
         <button
           onClick={() => setShowHelp((s) => !s)}
           title="Voice commands"
+          aria-label="Voice commands"
           className={cn(
-            "grid h-11 w-11 place-items-center rounded-full transition-colors",
+            "grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors",
             showHelp ? "bg-white/10 text-white" : "text-slate-500 hover:text-white",
           )}
         >
@@ -93,9 +102,11 @@ export function DictationDock({
           </motion.span>
         </button>
 
-        <MicOrb state={state} level={level} engine={engine} onToggle={onToggle} />
+        <div className="shrink-0 scale-[0.85] sm:scale-100">
+          <MicOrb state={state} level={level} engine={engine} onToggle={onToggle} />
+        </div>
 
-        <div className="flex min-w-[13rem] max-w-[22rem] flex-col px-2">
+        <div className="flex min-w-0 flex-1 flex-col px-1 sm:min-w-[13rem] sm:max-w-[22rem] sm:px-2">
           <AnimatePresence mode="wait">
             {state === "idle" ? (
               <motion.p
@@ -103,10 +114,10 @@ export function DictationDock({
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
-                className="text-[13px] font-medium text-slate-300"
+                className="truncate text-[13px] font-medium text-slate-300"
               >
                 Auto Write
-                <span className="ml-1.5 text-[11px] font-normal text-slate-500">
+                <span className="ml-1.5 hidden text-[11px] font-normal text-slate-500 sm:inline">
                   tap the mic and just talk
                 </span>
               </motion.p>
@@ -124,14 +135,14 @@ export function DictationDock({
               </motion.p>
             )}
           </AnimatePresence>
-          <p className="text-[10.5px] uppercase tracking-wider text-slate-600">
+          <p className="truncate text-[10.5px] uppercase tracking-wider text-slate-600">
             {state === "idle"
-              ? "say “anotely done” to proofread"
+              ? `say “${donePhrase}” to proofread`
               : `${engine} engine · level ${Math.round(level * 100)}%`}
           </p>
         </div>
 
-        <div className="grid h-11 w-11 place-items-center text-slate-600">
+        <div className="hidden h-11 w-11 shrink-0 place-items-center text-slate-600 sm:grid">
           <Keyboard className="h-4 w-4" />
         </div>
       </div>
