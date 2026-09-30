@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+ï»¿import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 
 type Entry = { number: string; href: string; label: string };
@@ -12,7 +12,7 @@ const entries: Entry[] = [
 ];
 
 /**
- * Full-screen ruled-paper overlay. Not a drawer, not a hamburger-to-X — it
+ * Full-screen ruled-paper overlay. Not a drawer, not a hamburger-to-X â€” it
  * reads as a sheet of notebook paper pulled over the page. Numbered entries,
  * flat ink, no shadow, no blur.
  */
@@ -50,7 +50,7 @@ export function MobileMenu({
       <div className="relative flex h-full flex-col px-6 pb-10 pt-8 sm:px-10">
         <div className="flex items-center justify-between">
           <span className="label-mono text-[0.75rem] text-ink/50">
-            menu · 05 entries
+            menu Â· 05 entries
           </span>
           <button
             type="button"
@@ -101,10 +101,10 @@ export function MobileMenu({
 
         <div className="mt-auto flex items-center justify-between border-t-2 border-ink pt-5">
           <span className="label-mono text-[0.6875rem] text-ink/40">
-            © 2026 Anotely
+            Â© 2026 Anotely
           </span>
           <span className="label-mono text-[0.6875rem] text-ink/40">
-            desktop first · voice first
+            desktop first Â· voice first
           </span>
         </div>
       </div>

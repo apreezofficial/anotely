@@ -1,4 +1,4 @@
-import { Container, SectionTag } from "./ui";
+﻿import { Container, SectionTag } from "./ui";
 import { landingIcons } from "./icons";
 
 /**
@@ -19,7 +19,7 @@ const features = [
     icon: landingIcons["Auto-title"],
     title: "Auto-title",
     body: "Notes are named the moment they are created. No more untitled-4 hunting for the thing you wrote.",
-    example: "title � rollout slipped a week",
+    example: "title · rollout slipped a week",
     surface: "bg-paper text-ink",
     tilt: "note-tilt-b",
   },

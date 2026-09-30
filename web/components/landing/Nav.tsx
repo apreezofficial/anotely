@@ -1,11 +1,11 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { MobileMenu } from "./MobileMenu";
 import { Wordmark } from "./Logo";
 import { ButtonLink, Container } from "./ui";
 
 /**
  * Asymmetric nav. The wordmark sits at the far left, the primary action at
- * the far right, and the in-between links are deliberately not mirrored �
+ * the far right, and the in-between links are deliberately not mirrored —
  * they cluster toward the right so the left edge stays open and readable.
  * Sticky, flat paper, 1.5px ink bottom border, no blur.
  */
